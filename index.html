@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KREDS — a private membership community for Copenhagen's hospitality professionals. Genuine discounts, industry events, jobs board. Launching June 1, 2026." />
+  <title>KREDS — The inner circle of Copenhagen hospitality</title>
+
+  <!--
+    ========================================================
+    IMAGES USED (all Unsplash — free for commercial use, no attribution required)
+    Swap any src URL below for your own photos when ready.
+
+    • Hero bg        — photo-1543007631-283050bb3e8c  (warm-lit empty restaurant)
+    • About portrait — photo-1669827543966-a3a3d1435db3 (person with silver teapot)
+    • Venues bg      — photo-1514933651103-005eec06c04b (brown-themed bar)
+    • Waitlist bg    — photo-1540224769541-7e6e20a42330 (pendant light)
+
+    Unsplash URL pattern:
+      https://images.unsplash.com/photo-{ID}?w={WIDTH}&q={QUALITY}&auto=format&fit=crop
+    Recommended: w=2000 q=75 for full-bleed backgrounds, w=1200 for portraits.
+    ========================================================
+  -->
+
+  <!-- ===== FONTS ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ===== TAILWIND ===== -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind theme extension — edit brand tokens here
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Brand palette — tweak here and it propagates everywhere
+            forest:  '#1F4E3D',   // primary dark green
+            forestDark: '#163528',
+            cream:   '#F5F1E8',   // page background
+            paper:   '#FAF7EF',   // lighter card background
+            brass:   '#B8935A',   // gold accent
+            brassDark: '#9A7946',
+            ink:     '#1A2E26',   // body text
+          },
+          fontFamily: {
+            display: ['Fraunces', 'Georgia', 'serif'],
+            sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+          letterSpacing: {
+            tightest: '-0.035em',
+          },
+          maxWidth: {
+            '7xl': '84rem',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- ===== CUSTOM CSS ===== -->
+  <style>
+    :root { color-scheme: light; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      color: #1A2E26;
+      background: #F5F1E8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle grain texture overlay for warmth */
+    .grain::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.35;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/></svg>");
+    }
+
+    /* FAQ accordion chevron rotation */
+    details[open] summary .chev { transform: rotate(45deg); }
+    summary::-webkit-details-marker { display: none; }
+    summary { list-style: none; }
+
+    /* Logo strip marquee */
+    @keyframes scrollX {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-track {
+      animation: scrollX 40s linear infinite;
+    }
+    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+
+    /* Hero fade-in */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+    .fade-up.d1 { animation-delay: 0.05s; }
+    .fade-up.d2 { animation-delay: 0.15s; }
+    .fade-up.d3 { animation-delay: 0.3s; }
+    .fade-up.d4 { animation-delay: 0.45s; }
+    .fade-up.d5 { animation-delay: 0.6s; }
+
+    /* Mobile menu slide */
+    .mobile-panel {
+      transform: translateY(-100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mobile-panel.open { transform: translateY(0); }
+  </style>
+</head>
+
+<body class="bg-cream text-ink font-sans">
+
+  <!-- ========================================================= -->
+  <!-- STICKY HEADER                                              -->
+  <!-- Logo + desktop nav + CTA + mobile hamburger                -->
+  <!-- ========================================================= -->
+  <header id="site-header" class="sticky top-0 z-50 bg-cream/85 backdrop-blur-md border-b border-forest/10">
+    <div class="max-w-7xl mx-auto px-5 md:px-10 h-16 md:h-20 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#top" class="font-display font-bold text-forest text-2xl md:text-3xl tracking-tightest">
+        KREDS
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-10 text-[13px] font-semibold tracking-[0.12em] uppercase text-forest">
+        <a href="#about"   class="hover:text-brass transition-colors">About</a>
+        <a href="#members" class="hover:text-brass transition-colors">For Members</a>
+        <a href="#venues"  class="hover:text-brass transition-colors">For Venues</a>
+        <a href="#faq"     class="hover:text-brass transition-colors">Questions</a>
+      </nav>
+
+      <!-- Desktop CTA -->
+      <a href="#waitlist"
+         class="hidden md:inline-block bg-forest hover:bg-forestDark text-cream text-[12px] font-semibold tracking-[0.18em] uppercase px-6 py-3 transition-colors">
+        Join the Waitlist
+      </a>
+
+      <!-- Mobile hamburger button -->
+      <button id="menu-btn"
+              aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu"
+              class="md:hidden flex flex-col gap-[5px] p-2 -mr-2">
+        <span class="block w-6 h-[2px] bg-forest transition-transform" data-line="1"></span>
+        <span class="block w-6 h-[2px] bg-forest transition-opacity"  data-line="2"></span>
+        <span class="block w-6 h-[2px] bg-forest transition-transform" data-line="3"></span>
+      </button>
+    </div>
+
+    <!-- Mobile slide-down panel -->
+    <div id="mobile-menu"
+         class="mobile-panel md:hidden absolute top-16 inset-x-0 bg-cream border-b border-forest/10 shadow-lg">
+      <nav class="flex flex-col px-5 py-6 gap-1 text-forest font-display text-2xl">
+        <a href="#about"   class="py-3 border-b border-forest/10 hover:text-brass">About</a>
+        <a href="#members" class="py-3 border-b border-forest/10 hover:text-brass">For Members</a>
+        <a href="#venues"  class="py-3 border-b border-forest/10 hover:text-brass">For Venues</a>
+        <a href="#faq"     class="py-3 border-b border-forest/10 hover:text-brass">Questions</a>
+        <a href="#waitlist"
+           class="mt-4 bg-forest text-cream text-center py-4 font-sans text-sm tracking-[0.18em] uppercase">
+          Join the Waitlist
+        </a>
+      </nav>
+    </div>
+  </header>
+
+
+  <!-- ========================================================= -->
+  <!-- HERO                                                       -->
+  <!-- Headline + subhead + countdown + dual CTAs                 -->
+  <!-- ========================================================= -->
+  <section id="top" class="relative overflow-hidden">
+    <!-- Background: real photo with cream wash overlay -->
+    <!-- To swap: replace the src URL below. Any wide landscape photo works. -->
+    <div class="absolute inset-0 -z-10">
+      <img
+        src="https://images.unsplash.com/photo-1543007631-283050bb3e8c?w=2000&q=75&auto=format&fit=crop"
+        alt=""
+        class="w-full h-full object-cover"
+        loading="eager" fetchpriority="high" />
+      <!-- Cream wash — adjust opacity 0.55–0.85 to taste -->
+      <div class="absolute inset-0" style="background: rgba(245, 241, 232, 0.78);"></div>
+      <!-- Warm accent glows layered on top -->
+      <div class="absolute inset-0"
+           style="background:
+              radial-gradient(ellipse at 75% 30%, rgba(184,147,90,0.18), transparent 55%),
+              radial-gradient(ellipse at 20% 80%, rgba(31,78,61,0.10), transparent 60%);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-5 md:px-10 pt-14 md:pt-24 pb-20 md:pb-28 grid md:grid-cols-12 gap-10 md:gap-12 items-center">
+
+      <!-- Left: copy -->
+      <div class="md:col-span-7">
+        <p class="fade-up d1 text-brass text-[11px] md:text-xs font-semibold tracking-[0.24em] uppercase mb-5">
+          Launching 1 June 2026 — Copenhagen
+        </p>
+
+        <h1 class="fade-up d2 font-display font-bold text-forest leading-[0.95] tracking-tightest text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl">
+          The inner circle<br class="hidden sm:inline"/>
+          of Copenhagen<br class="hidden sm:inline"/>
+          hospitality
+        </h1>
+
+        <p class="fade-up d3 mt-6 md:mt-8 text-base md:text-lg text-ink/75 max-w-xl leading-relaxed">
+          A private membership community only for Denmark's hospitality staff — bartenders, chefs, sommeliers, front-of-house and hotel professionals.
+        </p>
+
+        <ul class="fade-up d4 mt-6 md:mt-8 space-y-2 text-ink/80 text-[15px]">
+          <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brass"></span> Industry-verified members only</li>
+          <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brass"></span> Genuine discounts up to 50% off</li>
+          <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brass"></span> Digital member card &amp; events</li>
+          <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brass"></span> A real peer community</li>
+        </ul>
+
+        <!-- Dual CTAs -->
+        <div class="fade-up d5 mt-8 md:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-xl">
+          <a href="#waitlist"
+             class="group flex-1 bg-forest hover:bg-forestDark text-cream px-7 py-5 text-center transition-colors">
+            <span class="block text-[10px] font-semibold tracking-[0.2em] uppercase opacity-70 group-hover:opacity-90">Member</span>
+            <span class="block font-display text-lg font-semibold mt-0.5">I Work in Hospitality</span>
+          </a>
+          <a href="#venue-waitlist"
+             class="group flex-1 bg-cream border border-forest text-forest hover:bg-forest hover:text-cream px-7 py-5 text-center transition-colors">
+            <span class="block text-[10px] font-semibold tracking-[0.2em] uppercase opacity-70">Partner</span>
+            <span class="block font-display text-lg font-semibold mt-0.5">I Own a Venue</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: countdown card -->
+      <div class="md:col-span-5">
+        <div class="fade-up d4 relative bg-forest text-cream p-7 md:p-9 shadow-xl">
+          <!-- Decorative corner -->
+          <div class="absolute top-5 right-5 w-12 h-12 border-t border-r border-brass/60"></div>
+          <div class="absolute bottom-5 left-5 w-12 h-12 border-b border-l border-brass/60"></div>
+
+          <p class="text-brass text-[11px] font-semibold tracking-[0.24em] uppercase mb-3">
+            Doors Open In
+          </p>
+          <h3 class="font-display text-2xl md:text-3xl font-semibold mb-6">
+            Public launch — 1 June 2026
+          </h3>
+
+          <!-- Countdown grid -->
+          <div id="countdown" class="grid grid-cols-4 gap-3 md:gap-4">
+            <div class="text-center">
+              <div id="cd-days" class="font-display text-3xl md:text-5xl font-bold">00</div>
+              <div class="text-[10px] md:text-xs uppercase tracking-[0.18em] text-cream/70 mt-1">Days</div>
+            </div>
+            <div class="text-center">
+              <div id="cd-hours" class="font-display text-3xl md:text-5xl font-bold">00</div>
+              <div class="text-[10px] md:text-xs uppercase tracking-[0.18em] text-cream/70 mt-1">Hours</div>
+            </div>
+            <div class="text-center">
+              <div id="cd-mins" class="font-display text-3xl md:text-5xl font-bold">00</div>
+              <div class="text-[10px] md:text-xs uppercase tracking-[0.18em] text-cream/70 mt-1">Minutes</div>
+            </div>
+            <div class="text-center">
+              <div id="cd-secs" class="font-display text-3xl md:text-5xl font-bold">00</div>
+              <div class="text-[10px] md:text-xs uppercase tracking-[0.18em] text-cream/70 mt-1">Seconds</div>
+            </div>
+          </div>
+
+          <div class="mt-7 pt-6 border-t border-cream/15 flex items-center justify-between gap-4">
+            <p class="text-xs md:text-sm text-cream/80 leading-snug">
+              First 100 founding members<br/>lock in DKK 399/year — for life.
+            </p>
+            <a href="#pricing" class="shrink-0 text-brass hover:text-cream text-xs font-semibold tracking-[0.18em] uppercase border-b border-brass/50 pb-0.5">
+              See rates →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- PARTNER VENUE LOGO STRIP                                   -->
+  <!-- Replace the venue names below with real partners as you    -->
+  <!-- sign them. The strip auto-scrolls on all screens.          -->
+  <!-- ========================================================= -->
+  <section class="bg-forest text-cream py-10 md:py-12 border-y border-forest/30 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-5 md:px-10">
+      <p class="text-center text-brass text-[10px] md:text-xs font-semibold tracking-[0.28em] uppercase mb-6 md:mb-8">
+        Early partner venues
+      </p>
+
+      <div class="marquee-wrap relative">
+        <!-- Fade edges -->
+        <div class="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-forest to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-forest to-transparent z-10 pointer-events-none"></div>
+
+        <!-- Marquee track: the list is duplicated to create a seamless loop -->
+        <div class="marquee-track flex gap-10 md:gap-16 whitespace-nowrap">
+          <!-- SET 1 -->
+          <span class="font-display italic text-2xl md:text-3xl text-cream/85">Restaurant One</span>
+          <span class="font-display text-2xl md:text-3xl font-semibold text-cream/85 tracking-tightest">BAR NORD</span>
+          <span class="font-display italic text-2xl md:text-3xl text-cream/85">Junior</span>
+          <span class="font-display text-2xl md:text-3xl font-semibold text-cream/85 tracking-tightest">KØD &amp; VIN</span>
+          <span class="font-display italic text-2xl md:text-3xl text-cream/85">Havn Kitchen</span>
+          <span class="font-display text-2xl md:text-3xl font-semibold text-cream/85 tracking-tightest">TIVOLI HOUSE</span>
+          <span class="font-display italic text-2xl md:text-3xl text-cream/85">Nørrebro Social</span>
+          <span class="font-display text-2xl md:text-3xl font-semibold text-cream/85 tracking-tightest">ØST BREW CO.</span>
+          <!-- SET 2 (duplicate) -->
+          <span class="font-display italic text-2xl md:text-3xl text-cream/85">Restaurant One</span>
+          <span class="font-display text-2xl md:text-3xl font-semibold text-cream/85 tracking-tightest">BAR NORD</span>
+          <span class="font-display italic text-2xl md:text-3xl text-cream/85">Junior</span>
+          <span class="font-display text-2xl md:text-3xl font-semibold text-cream/85 tracking-tightest">KØD &amp; VIN</span>
+          <span class="font-display italic text-2xl md:text-3xl text-cream/85">Havn Kitchen</span>
+          <span class="font-display text-2xl md:text-3xl font-semibold text-cream/85 tracking-tightest">TIVOLI HOUSE</span>
+          <span class="font-display italic text-2xl md:text-3xl text-cream/85">Nørrebro Social</span>
+          <span class="font-display text-2xl md:text-3xl font-semibold text-cream/85 tracking-tightest">ØST BREW CO.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- ABOUT                                                      -->
+  <!-- Short mission paragraph                                    -->
+  <!-- ========================================================= -->
+  <section id="about" class="py-20 md:py-28">
+    <div class="max-w-6xl mx-auto px-5 md:px-10 grid md:grid-cols-12 gap-10 md:gap-16 items-center">
+
+      <!-- Copy column -->
+      <div class="md:col-span-7 md:order-1 order-2">
+        <p class="text-brass text-[11px] font-semibold tracking-[0.24em] uppercase mb-5">About KREDS</p>
+        <h2 class="font-display font-semibold text-forest text-3xl md:text-5xl leading-tight tracking-tightest">
+          Built by Copenhagen hospitality,<br class="hidden md:inline"/> <em class="italic font-normal">for</em> Copenhagen hospitality.
+        </h2>
+        <p class="mt-6 md:mt-8 text-lg text-ink/75 leading-relaxed">
+          KREDS gives the people who run Copenhagen's best kitchens, bars and dining rooms a way to experience each other's rooms — on favourable terms, with real recognition, and with a network that actually looks like them.
+        </p>
+      </div>
+
+      <!-- Image column — swap src to replace -->
+      <div class="md:col-span-5 md:order-2 order-1 relative">
+        <img
+          src="https://images.unsplash.com/photo-1669827543966-a3a3d1435db3?w=1200&q=75&auto=format&fit=crop"
+          alt="A hospitality professional at work"
+          class="w-full aspect-[4/5] object-cover shadow-xl"
+          loading="lazy" />
+        <!-- Decorative brass frame offset behind -->
+        <div class="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 w-full h-full border-2 border-brass -z-10 hidden md:block"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- FOR MEMBERS                                                -->
+  <!-- 6-card benefit grid                                        -->
+  <!-- ========================================================= -->
+  <section id="members" class="relative py-20 md:py-28 bg-paper">
+    <div class="max-w-7xl mx-auto px-5 md:px-10">
+
+      <div class="text-center mb-14 md:mb-16">
+        <p class="text-brass text-[11px] font-semibold tracking-[0.24em] uppercase mb-4">Membership</p>
+        <h2 class="font-display font-bold text-forest text-4xl md:text-6xl tracking-tightest">For Members</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+        <!-- Card template: duplicate and edit title + copy to add a benefit -->
+        <div class="bg-cream p-8 md:p-10 border border-forest/10 hover:border-brass transition-colors">
+          <h3 class="font-display text-forest text-2xl md:text-[26px] font-semibold mb-4 leading-tight">Genuine discounts up to 50% off</h3>
+          <p class="text-ink/75 leading-relaxed">Unlock significant savings at Copenhagen's most respected restaurants, bars and venues.</p>
+        </div>
+
+        <div class="bg-cream p-8 md:p-10 border border-forest/10 hover:border-brass transition-colors">
+          <h3 class="font-display text-forest text-2xl md:text-[26px] font-semibold mb-4 leading-tight">Digital member card</h3>
+          <p class="text-ink/75 leading-relaxed">Your industry passport and verification key, accessible instantly on your mobile device.</p>
+        </div>
+
+        <div class="bg-cream p-8 md:p-10 border border-forest/10 hover:border-brass transition-colors">
+          <h3 class="font-display text-forest text-2xl md:text-[26px] font-semibold mb-4 leading-tight">Industry events &amp; meetups</h3>
+          <p class="text-ink/75 leading-relaxed">Entry to curated social gatherings and exclusive networking events for peers only.</p>
+        </div>
+
+        <div class="bg-cream p-8 md:p-10 border border-forest/10 hover:border-brass transition-colors">
+          <h3 class="font-display text-forest text-2xl md:text-[26px] font-semibold mb-4 leading-tight">Jobs board &amp; opportunities</h3>
+          <p class="text-ink/75 leading-relaxed">Find your next career move within our verified network of Copenhagen's top-tier hospitality venues.</p>
+        </div>
+
+        <div class="bg-cream p-8 md:p-10 border border-forest/10 hover:border-brass transition-colors">
+          <h3 class="font-display text-forest text-2xl md:text-[26px] font-semibold mb-4 leading-tight">Peer network &amp; mentorship</h3>
+          <p class="text-ink/75 leading-relaxed">Connect with seasoned professionals and grow through Copenhagen's active hospitality community.</p>
+        </div>
+
+        <div class="bg-cream p-8 md:p-10 border border-forest/10 hover:border-brass transition-colors">
+          <h3 class="font-display text-forest text-2xl md:text-[26px] font-semibold mb-4 leading-tight">Industry-only access</h3>
+          <p class="text-ink/75 leading-relaxed">Entry to closed-door events, limited releases, and venue launches across the city.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- FOR VENUES                                                 -->
+  <!-- Venue value prop grid                                      -->
+  <!-- ========================================================= -->
+  <section id="venues" class="relative py-20 md:py-28 text-cream overflow-hidden">
+    <!-- Background: dark bar photo with heavy forest overlay -->
+    <div class="absolute inset-0 -z-10">
+      <img
+        src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=2000&q=75&auto=format&fit=crop"
+        alt=""
+        class="w-full h-full object-cover"
+        loading="lazy" />
+      <div class="absolute inset-0" style="background: rgba(22, 53, 40, 0.92);"></div>
+    </div>
+
+    <!-- Subtle decorative frame -->
+    <div class="absolute inset-6 md:inset-10 border border-brass/20 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-5 md:px-10 relative">
+
+      <div class="text-center mb-14 md:mb-16">
+        <p class="text-brass text-[11px] font-semibold tracking-[0.24em] uppercase mb-4">Partner Venues</p>
+        <h2 class="font-display font-bold text-cream text-4xl md:text-6xl tracking-tightest">For Venues</h2>
+        <p class="mt-5 text-cream/75 max-w-2xl mx-auto leading-relaxed">
+          Hospitality professionals are your most discerning guests — and your biggest advocates. They know quality. They come back.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5 md:gap-6">
+        <div class="border border-brass/40 p-8 md:p-10 hover:bg-forestDark transition-colors">
+          <h3 class="font-display text-2xl md:text-3xl font-semibold mb-3">Always free listing</h3>
+          <p class="text-cream/75 leading-relaxed">No signup fee, no monthly subscription, no commission on visits. Core partnership stays free permanently.</p>
+        </div>
+        <div class="border border-brass/40 p-8 md:p-10 hover:bg-forestDark transition-colors">
+          <h3 class="font-display text-2xl md:text-3xl font-semibold mb-3">You set the terms</h3>
+          <p class="text-cream/75 leading-relaxed">Choose your days, hours, discount and conditions. Adjust or pause whenever you want.</p>
+        </div>
+        <div class="border border-brass/40 p-8 md:p-10 hover:bg-forestDark transition-colors">
+          <h3 class="font-display text-2xl md:text-3xl font-semibold mb-3">Fill quieter moments</h3>
+          <p class="text-cream/75 leading-relaxed">KREDS works best on your quieter days — Mondays, Tuesdays, early evenings. Drive traffic when you need it.</p>
+        </div>
+        <div class="border border-brass/40 p-8 md:p-10 hover:bg-forestDark transition-colors">
+          <h3 class="font-display text-2xl md:text-3xl font-semibold mb-3">Reach serious regulars</h3>
+          <p class="text-cream/75 leading-relaxed">Every member works in the industry. They spend, bring friends, appreciate quality, and bring recommendations.</p>
+        </div>
+        <div class="border border-brass/40 p-8 md:p-10 hover:bg-forestDark transition-colors">
+          <h3 class="font-display text-2xl md:text-3xl font-semibold mb-3">Post jobs to the right people</h3>
+          <p class="text-cream/75 leading-relaxed">Every person who sees your listing works in hospitality. No general job-board noise — just verified peers.</p>
+        </div>
+        <div class="border border-brass/40 p-8 md:p-10 hover:bg-forestDark transition-colors">
+          <h3 class="font-display text-2xl md:text-3xl font-semibold mb-3">Offer it as employee benefit</h3>
+          <p class="text-cream/75 leading-relaxed">Give your team access to KREDS as part of their package. A perk they'll actually use — and value.</p>
+        </div>
+      </div>
+
+      <div class="mt-12 md:mt-14 text-center">
+        <a href="#venue-waitlist"
+           class="inline-block bg-brass hover:bg-brassDark text-forest font-semibold text-[12px] tracking-[0.2em] uppercase px-10 py-4 transition-colors">
+          List Your Venue →
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- PRICING                                                    -->
+  <!-- 3 tiers — edit prices via the data-price spans             -->
+  <!-- ========================================================= -->
+  <section id="pricing" class="py-20 md:py-28">
+    <div class="max-w-7xl mx-auto px-5 md:px-10">
+
+      <div class="text-center mb-14 md:mb-16">
+        <p class="text-forest text-[11px] font-semibold tracking-[0.28em] uppercase mb-4">Member Pricing</p>
+        <h2 class="font-display font-bold text-forest text-4xl md:text-5xl tracking-tightest">Simple, honest rates.</h2>
+        <p class="mt-4 text-ink/70 max-w-xl mx-auto">Every plan starts with a <strong class="text-forest">3-month free trial</strong> at launch. Cancel anytime before the trial ends.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 md:gap-0 md:items-stretch max-w-6xl mx-auto">
+
+        <!-- MONTHLY -->
+        <div class="bg-paper border border-forest/15 p-8 md:p-10 md:py-14 md:-mr-px flex flex-col">
+          <h3 class="font-display text-forest text-2xl font-bold tracking-[0.08em] text-center uppercase">Monthly</h3>
+          <div class="text-center mt-8 mb-6">
+            <div class="font-display text-forest text-3xl md:text-4xl">DKK 69 <span class="text-lg text-ink/60">/ month</span></div>
+            <p class="text-ink/60 mt-2">Cancel any time</p>
+          </div>
+          <ul class="space-y-2 text-ink/80 mt-4 flex-1">
+            <li>· All discounts at partner venues</li>
+            <li>· Digital member card</li>
+            <li>· Industry events access</li>
+            <li>· Jobs board</li>
+            <li>· Cancel any time</li>
+          </ul>
+          <p class="mt-8 text-sm text-ink/60">3 months free at launch.</p>
+        </div>
+
+        <!-- FOUNDING (center, emphasised) -->
+        <div class="bg-forest text-cream p-8 md:p-10 md:py-16 flex flex-col relative md:-my-4 md:z-10 md:shadow-2xl">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brass text-forest text-[10px] font-bold tracking-[0.22em] uppercase px-4 py-1.5">
+            Founding Rate
+          </span>
+          <h3 class="font-display text-2xl font-bold tracking-[0.08em] text-center uppercase">Founding Member</h3>
+          <div class="text-center mt-8 mb-6">
+            <div class="font-display text-3xl md:text-4xl">DKK 399 <span class="text-lg text-cream/70">/ year</span></div>
+            <p class="text-brass mt-2 font-medium">Locked for life</p>
+          </div>
+          <ul class="space-y-2 text-cream/85 mt-4 flex-1">
+            <li>· All member benefits included</li>
+            <li>· Rate locked forever</li>
+            <li>· 3 months free at launch</li>
+            <li>· Limited to first 100 members</li>
+          </ul>
+          <a href="#waitlist" class="mt-8 block text-center text-brass underline underline-offset-4 decoration-brass/50 hover:decoration-brass text-sm">
+            Join the waitlist now to secure this rate
+          </a>
+        </div>
+
+        <!-- ANNUAL -->
+        <div class="bg-paper border border-forest/15 p-8 md:p-10 md:py-14 md:-ml-px flex flex-col">
+          <h3 class="font-display text-forest text-2xl font-bold tracking-[0.08em] text-center uppercase">Annual</h3>
+          <div class="text-center mt-8 mb-6">
+            <div class="font-display text-forest text-3xl md:text-4xl">DKK 599 <span class="text-lg text-ink/60">/ year</span></div>
+            <p class="text-ink/60 mt-2">Save ~28%</p>
+          </div>
+          <ul class="space-y-2 text-ink/80 mt-4 flex-1">
+            <li>· All monthly benefits</li>
+            <li>· Equivalent to ~50 DKK/month</li>
+            <li>· Priority for limited events</li>
+            <li>· 3 months free at launch</li>
+          </ul>
+          <p class="mt-8 text-sm text-ink/60">3 months free at launch.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- FAQ ACCORDION                                              -->
+  <!-- Using native <details>/<summary> for accessibility         -->
+  <!-- Add new Q/A by duplicating a <details> block               -->
+  <!-- ========================================================= -->
+  <section id="faq" class="py-20 md:py-28 bg-paper">
+    <div class="max-w-3xl mx-auto px-5 md:px-10">
+
+      <div class="text-center mb-12 md:mb-14">
+        <p class="text-brass text-[11px] font-semibold tracking-[0.24em] uppercase mb-4">Questions</p>
+        <h2 class="font-display font-bold text-forest text-4xl md:text-5xl tracking-tightest">Good questions, answered.</h2>
+      </div>
+
+      <div class="space-y-3">
+        <details class="group bg-cream border border-forest/10 open:border-brass/50">
+          <summary class="flex items-center justify-between gap-6 p-5 md:p-6 cursor-pointer">
+            <span class="font-display text-forest text-lg md:text-xl font-semibold">Who qualifies as a KREDS member?</span>
+            <span class="chev shrink-0 text-brass text-2xl transition-transform">+</span>
+          </summary>
+          <div class="px-5 md:px-6 pb-5 md:pb-6 text-ink/75 leading-relaxed">
+            Anyone currently working in Copenhagen hospitality — bartenders, chefs, sommeliers, servers, floor managers, hotel staff, baristas. We verify employment at sign-up through a quick document check.
+          </div>
+        </details>
+
+        <details class="group bg-cream border border-forest/10 open:border-brass/50">
+          <summary class="flex items-center justify-between gap-6 p-5 md:p-6 cursor-pointer">
+            <span class="font-display text-forest text-lg md:text-xl font-semibold">How does verification work?</span>
+            <span class="chev shrink-0 text-brass text-2xl transition-transform">+</span>
+          </summary>
+          <div class="px-5 md:px-6 pb-5 md:pb-6 text-ink/75 leading-relaxed">
+            Upload proof of current hospitality employment — a recent payslip, contract, or uniform badge photo. Verification typically completes within 24 hours. Your digital member card activates immediately after approval.
+          </div>
+        </details>
+
+        <details class="group bg-cream border border-forest/10 open:border-brass/50">
+          <summary class="flex items-center justify-between gap-6 p-5 md:p-6 cursor-pointer">
+            <span class="font-display text-forest text-lg md:text-xl font-semibold">When does KREDS launch?</span>
+            <span class="chev shrink-0 text-brass text-2xl transition-transform">+</span>
+          </summary>
+          <div class="px-5 md:px-6 pb-5 md:pb-6 text-ink/75 leading-relaxed">
+            Public launch is 1 June 2026. Waitlist members get early access the week before, plus a guaranteed founding rate if they're in the first 100 confirmations.
+          </div>
+        </details>
+
+        <details class="group bg-cream border border-forest/10 open:border-brass/50">
+          <summary class="flex items-center justify-between gap-6 p-5 md:p-6 cursor-pointer">
+            <span class="font-display text-forest text-lg md:text-xl font-semibold">What happens when my 3-month trial ends?</span>
+            <span class="chev shrink-0 text-brass text-2xl transition-transform">+</span>
+          </summary>
+          <div class="px-5 md:px-6 pb-5 md:pb-6 text-ink/75 leading-relaxed">
+            You'll get a reminder a week before your trial ends. You can pick any plan — monthly, annual, or founding — or cancel with one tap. No auto-charges without a clear heads-up.
+          </div>
+        </details>
+
+        <details class="group bg-cream border border-forest/10 open:border-brass/50">
+          <summary class="flex items-center justify-between gap-6 p-5 md:p-6 cursor-pointer">
+            <span class="font-display text-forest text-lg md:text-xl font-semibold">Does it cost my venue anything to join?</span>
+            <span class="chev shrink-0 text-brass text-2xl transition-transform">+</span>
+          </summary>
+          <div class="px-5 md:px-6 pb-5 md:pb-6 text-ink/75 leading-relaxed">
+            No. Listing on KREDS is free — no signup fee, no monthly subscription, no commission on member visits. Venues set their own discount, their own days, and can pause any time.
+          </div>
+        </details>
+
+        <details class="group bg-cream border border-forest/10 open:border-brass/50">
+          <summary class="flex items-center justify-between gap-6 p-5 md:p-6 cursor-pointer">
+            <span class="font-display text-forest text-lg md:text-xl font-semibold">What counts as a "genuine discount"?</span>
+            <span class="chev shrink-0 text-brass text-2xl transition-transform">+</span>
+          </summary>
+          <div class="px-5 md:px-6 pb-5 md:pb-6 text-ink/75 leading-relaxed">
+            Venues set their own terms, but we require at least a meaningful offer — typically 20–50% off food, drink, or full bills on specified days. No "10% on filter coffee" filler. If a listing doesn't meet the bar, it doesn't go up.
+          </div>
+        </details>
+
+        <details class="group bg-cream border border-forest/10 open:border-brass/50">
+          <summary class="flex items-center justify-between gap-6 p-5 md:p-6 cursor-pointer">
+            <span class="font-display text-forest text-lg md:text-xl font-semibold">Can I cancel?</span>
+            <span class="chev shrink-0 text-brass text-2xl transition-transform">+</span>
+          </summary>
+          <div class="px-5 md:px-6 pb-5 md:pb-6 text-ink/75 leading-relaxed">
+            Yes, any time, from inside the app — no email required, no retention calls. Monthly cancels immediately. Annual runs to the end of the paid period.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- FINAL CTA / WAITLIST                                       -->
+  <!-- Two anchored targets: #waitlist (member) + #venue-waitlist -->
+  <!-- Replace the form action or hook it to your backend         -->
+  <!-- ========================================================= -->
+  <section id="waitlist" class="py-20 md:py-28 text-cream relative overflow-hidden">
+    <!-- Background: moody pendant/bar light photo with dark forest overlay -->
+    <div class="absolute inset-0 -z-0">
+      <img
+        src="https://images.unsplash.com/photo-1540224769541-7e6e20a42330?w=2000&q=75&auto=format&fit=crop"
+        alt=""
+        class="w-full h-full object-cover"
+        loading="lazy" />
+      <div class="absolute inset-0" style="background: rgba(22, 53, 40, 0.88);"></div>
+    </div>
+    <div class="absolute inset-0 -z-0 opacity-40"
+         style="background: radial-gradient(ellipse at 20% 20%, rgba(184,147,90,0.45), transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(184,147,90,0.2), transparent 55%);"></div>
+
+    <div class="max-w-3xl mx-auto px-5 md:px-10 relative text-center">
+      <p class="text-brass text-[11px] font-semibold tracking-[0.24em] uppercase mb-5">Join the Waitlist</p>
+      <h2 class="font-display font-bold text-4xl md:text-6xl tracking-tightest leading-[1.05]">
+        Be among the <em class="italic font-normal text-brass">first 100</em>.
+      </h2>
+      <p class="mt-5 text-cream/75 md:text-lg">
+        Lock in DKK 399/year — for life — plus 3 months free at launch.
+      </p>
+
+      <form onsubmit="event.preventDefault(); handleWaitlist(this);"
+            class="mt-10 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+        <input type="email" required placeholder="your@email.dk"
+               class="flex-1 bg-cream/10 border border-cream/25 text-cream placeholder:text-cream/50 px-5 py-4 focus:outline-none focus:border-brass focus:bg-cream/15" />
+        <button type="submit"
+                class="bg-brass hover:bg-brassDark text-forest font-semibold text-[12px] tracking-[0.2em] uppercase px-7 py-4 transition-colors">
+          Secure My Spot
+        </button>
+      </form>
+      <p class="mt-4 text-xs text-cream/55">We'll only email about launch. No spam, no newsletters.</p>
+
+      <!-- Venue waitlist sub-CTA -->
+      <div id="venue-waitlist" class="mt-14 pt-10 border-t border-cream/15">
+        <p class="text-cream/75 text-sm">Own or manage a venue?</p>
+        <a href="mailto:hello@kreds.dk?subject=Venue%20partnership"
+           class="inline-block mt-3 font-display text-xl md:text-2xl text-brass hover:text-cream border-b border-brass/40 pb-1 transition-colors">
+          Email us to list your venue →
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================= -->
+  <!-- FOOTER                                                     -->
+  <!-- ========================================================= -->
+  <footer class="bg-forestDark text-cream/70 py-10 md:py-12">
+    <div class="max-w-7xl mx-auto px-5 md:px-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div>
+        <div class="font-display font-bold text-cream text-2xl tracking-tightest">KREDS</div>
+        <p class="text-sm mt-1">Copenhagen, Denmark · Launching 1 June 2026</p>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-3 md:gap-8 text-sm">
+        <a href="mailto:hello@kreds.dk" class="hover:text-brass">hello@kreds.dk</a>
+        <a href="https://instagram.com/kredscph" target="_blank" rel="noopener" class="hover:text-brass">@kredscph</a>
+        <a href="#" class="hover:text-brass">Privacy</a>
+        <a href="#" class="hover:text-brass">Terms</a>
+      </div>
+
+      <p class="text-xs text-cream/50">© 2026 KREDS CPH</p>
+    </div>
+  </footer>
+
+
+  <!-- ========================================================= -->
+  <!-- SCRIPTS                                                    -->
+  <!-- Countdown + mobile menu toggle + form stub                 -->
+  <!-- ========================================================= -->
+  <script>
+    /* ---------- COUNTDOWN TIMER ---------- */
+    // Edit the launch date here — JS Date: YYYY, MONTH-1 (0-indexed!), DAY, HOUR, MIN
+    const LAUNCH = new Date(2026, 5, 1, 0, 0, 0); // June 1, 2026, 00:00 local
+
+    const el = {
+      d: document.getElementById('cd-days'),
+      h: document.getElementById('cd-hours'),
+      m: document.getElementById('cd-mins'),
+      s: document.getElementById('cd-secs'),
+    };
+    const pad = n => String(n).padStart(2, '0');
+
+    function tick() {
+      const diff = LAUNCH - new Date();
+      if (diff <= 0) {
+        el.d.textContent = el.h.textContent = el.m.textContent = el.s.textContent = '00';
+        return;
+      }
+      const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins  = Math.floor((diff / (1000 * 60)) % 60);
+      const secs  = Math.floor((diff / 1000) % 60);
+      el.d.textContent = pad(days);
+      el.h.textContent = pad(hours);
+      el.m.textContent = pad(mins);
+      el.s.textContent = pad(secs);
+    }
+    tick();
+    setInterval(tick, 1000);
+
+
+    /* ---------- MOBILE MENU ---------- */
+    const menuBtn  = document.getElementById('menu-btn');
+    const menu     = document.getElementById('mobile-menu');
+    const lines    = menuBtn.querySelectorAll('[data-line]');
+
+    function setMenu(open) {
+      menu.classList.toggle('open', open);
+      menuBtn.setAttribute('aria-expanded', open);
+      // Animate hamburger into an X
+      lines[0].style.transform = open ? 'translateY(7px) rotate(45deg)'  : '';
+      lines[1].style.opacity   = open ? '0' : '';
+      lines[2].style.transform = open ? 'translateY(-7px) rotate(-45deg)' : '';
+    }
+    menuBtn.addEventListener('click', () => {
+      setMenu(!menu.classList.contains('open'));
+    });
+    // Close menu when a nav link is tapped
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+
+    /* ---------- WAITLIST FORM STUB ---------- */
+    // Replace with a real endpoint (Formspree, Mailchimp, Supabase, etc.)
+    function handleWaitlist(form) {
+      const email = form.querySelector('input[type=email]').value;
+      console.log('Waitlist signup:', email);
+      form.innerHTML = '<p class="text-brass font-display text-xl py-4">You\'re on the list — welcome to KREDS.</p>';
+    }
+  </script>
+
+</body>
+</html>
